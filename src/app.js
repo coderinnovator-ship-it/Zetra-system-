@@ -1,20 +1,17 @@
-import { login } from './auth.js';
-import { sendMessage, listenMessages } from './chat.js';
+const messagesBox = document.getElementById("messages");
+const input = document.getElementById("messageInput");
 
-const loginBtn = document.getElementById('loginBtn');
-const sendBtn = document.getElementById('sendBtn');
+function render() {
+  const msgs = JSON.parse(localStorage.getItem("zetra_msgs") || "[]");
+  messagesBox.innerHTML = msgs.map(m => `<div>${m}</div>`).join("");
+}
 
-loginBtn.onclick = () => {
-  const name = document.getElementById('username').value.trim();
-  if (!name) return;
-  login(name);
+document.getElementById("sendBtn").onclick = () => {
+  const msgs = JSON.parse(localStorage.getItem("zetra_msgs") || "[]");
+  msgs.push(input.value);
+  localStorage.setItem("zetra_msgs", JSON.stringify(msgs));
+  input.value = "";
+  render();
 };
 
-sendBtn.onclick = () => {
-  const input = document.getElementById('messageInput');
-  if (!input.value) return;
-  sendMessage(input.value);
-  input.value = '';
-};
-
-listenMessages();
+render();
